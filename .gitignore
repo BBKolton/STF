@@ -1,15 +1,18 @@
-config/
-
 .Trash*
 
-nohup.out
 
-oldSTFSite/
 
-security/
+config/
 
-public/docs
+*security/*
 
 node_modules
 
+
+public
+
 uploads/
+
+oldSTFSite
+
+STF.sql

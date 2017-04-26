@@ -14,7 +14,7 @@ module.exports = function(app) {
 
 
 //redirect a lone proposals request to the browse page
-router.get('/proposals', function(req, res, next) {
+router.get('/proposals', function(req, res) {
 	res.redirect('proposals/browse');
 });
 

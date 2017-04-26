@@ -3,7 +3,7 @@ var https = require('https'); //for rerouting during netid logins
 var express = require('express'); //the express app framework
 var glob = require('glob'); //allows for globbing files by names
 var favicon = require('serve-favicon'); //literally oinly serves favicons
-var logger = require('morgan'); //logs things to files 
+var logger = require('morgan'); //logs things to files
 var cookieParser = require('cookie-parser'); //no explanation needed
 var bodyParser = require('body-parser'); //parses json, html, etc to html
 var compress = require('compression'); //compresses files and output to users
@@ -13,7 +13,7 @@ var session = require('express-session'); //for user sessions
 var fs = require('fs'); //to read files
 var multer = require('multer'); //to upload files
 var socket = require('socket.io'); //for back and forth communication
-var config = require('./config/config'); //configuration file 
+var config = require('./config/config'); //configuration file
 var db = require('./app/models'); //database connections
 var mysqlStore = require('express-mysql-session')
 
@@ -22,7 +22,9 @@ var app = express(); //let's get started!
 
 //authentication for uwnetid shibboleth communication
 var loginURL = '/login';
-var loginCallbackURL = '/login/callback';
+// TEST ENVIRONMENT: originally 'login/callback'
+// var loginCallbackURL = '/login/callback';
+var loginCallbackURL = ':8090/login/callback';
 var httpPort = process.env.HTTPPORT || 80;
 var httpsPort = process.env.HTTPSPORT || 443;
 //load certificate files
@@ -70,7 +72,7 @@ passport.use(strat);
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
- 
+
 passport.deserializeUser(function(user, done) {
     done(null, user);
 });
@@ -84,7 +86,7 @@ app.get(shib.urls.metadata, shib.metadataRoute(strat, pubCert));
 
 //require auth on all pages
 //app.use(shib.ensureAuth(loginURL));
-//or just the ones I want 
+//or just the ones I want
 /* app.get('protected/thing', shib.ensureAuth('/login'), function(req, response) {
 	//routing
 }); */
@@ -104,7 +106,7 @@ app.use(function removeTrailingSlashes(req, res, next) {
 });
 
 
-//for seamless integration for new users. An Admin will add a netid, 
+//for seamless integration for new users. An Admin will add a netid,
 //and when that netid logs in, we grab their info and insert it to teh database
 //should be refactored into some other place, slows down things right now
 app.use(function memberAddIfNotExists(req, res, next) {
@@ -155,7 +157,7 @@ app.use(function adminAndMemberCheck(req, res, next) {
 					res.locals.isCommitteeMember = false;
 				}
 			}
-			
+
 			next();
 		});
 	} else { //needed or it doesnt wait for callback
@@ -204,7 +206,7 @@ if(app.get('env') === 'development'){
 	});
 }
 
-//dont give verbose errors 
+//dont give verbose errors
 app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error', {
@@ -219,7 +221,7 @@ app.use(function (err, req, res, next) {
 //create https server and pass the express app
 var httpsServer = https.createServer({
 	key : privKey,
-	cert : pubCert 
+	cert : pubCert
 }, app);
 
 
@@ -251,5 +253,3 @@ db.sequelize
 		console.log(e)
 		throw new Error(e);
 	});
-
-

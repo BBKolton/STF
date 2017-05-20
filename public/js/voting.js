@@ -153,6 +153,7 @@ window.addEventListener('load', function() {
 
 	//change the data on the page to match the received page
 	function postData() {
+		console.log(this.responseText)
 		document.getElementById('content').innerHTML = this.responseText;
 		bindStuff();
 	}
